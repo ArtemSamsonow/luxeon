@@ -1,0 +1,81 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap");
+
+body,
+html {
+    height: 100%;
+    margin: 0;
+    /* Учитывает чёлку */
+    padding: env(safe-area-inset-top) 0 0;
+    overflow: auto;
+    overflow-x: hidden;
+    font-family: "Montserrat", sans-serif;
+    color: black;
+    background-size: cover;
+    scroll-behavior: smooth;
+    background-color: #fcfcfc;
+}
+
+body {
+    margin: 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+button,
+select {
+    text-transform: none;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cfcfd1;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+@media (max-width: 540px) {
+    body::-webkit-scrollbar {
+        display: none;
+    }
+    body {
+        scrollbar-width: none;
+    }
+}
+
+/* Убираем стрелочки в Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+/* Убираем стрелочки в Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+[data-sonner-toast][data-styled="true"] [data-button] {
+    background-color: transparent !important;
+}

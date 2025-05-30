@@ -1,0 +1,51 @@
+{
+    "name": "luxeon",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "lint-prettier": "prettier --write ./**/*.{ts,tsx,css,scss,md,json} --config ./.prettierrc",
+        "lint-eslint": "eslint --debug --fix src/**/*.{ts,tsx}",
+        "linters": "npm run lint-prettier && npm run lint-eslint",
+        "dev": "npm run linters && vite",
+        "build": "tsc -b && vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@heroui/react": "^2.7.8",
+        "@iconify/react": "^5.2.1",
+        "dotenv": "^16.4.7",
+        "firebase": "^11.8.1",
+        "framer-motion": "^12.6.3",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-hook-form": "^7.55.0",
+        "react-router-dom": "^7.6.1",
+        "swiper": "^11.2.7",
+        "tailwindcss-animate": "^1.0.7"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.24.0",
+        "@tailwindcss/typography": "^0.5.16",
+        "@types/dotenv": "^6.1.1",
+        "@types/node": "^22.14.0",
+        "@types/react": "^19.0.10",
+        "@types/react-dom": "^19.0.4",
+        "@vitejs/plugin-react": "^4.3.4",
+        "autoprefixer": "^10.4.21",
+        "eslint": "^9.21.0",
+        "eslint-import-resolver-alias": "^1.1.2",
+        "eslint-plugin-import": "^2.31.0",
+        "eslint-plugin-jsx-a11y": "^6.10.2",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^5.2.0",
+        "eslint-plugin-react-refresh": "^0.4.19",
+        "globals": "^15.15.0",
+        "postcss": "^8.5.3",
+        "prettier": "^3.5.3",
+        "tailwindcss": "^3.4.17",
+        "typescript": "~5.7.2",
+        "typescript-eslint": "^8.29.1",
+        "vite": "^6.2.0"
+    }
+}
