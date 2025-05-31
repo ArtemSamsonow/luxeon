@@ -31,7 +31,7 @@ export const Header = () => {
                         ЛАКИ
                     </Link>
                     <Link to="/oil" className="hover:opacity-80 transition">
-                        МАСЛО
+                        МАСЛA
                     </Link>
                     <Link to="/cream" className="hover:opacity-80 transition">
                         КРЕМА

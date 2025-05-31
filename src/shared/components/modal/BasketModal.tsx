@@ -1,9 +1,10 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { RHFProvider } from "@/app/providers";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../../firebase.ts";
+import { Icon } from "@iconify/react";
 
 interface BasketItem {
     id: string;
@@ -29,13 +30,12 @@ interface BasketModalProps {
 }
 
 export const BasketModal: FC<BasketModalProps> = ({ isOpen, clearBasket, onOpenChange, basketItems, removeFromBasket }) => {
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
     const methods = useForm<FormValues>({
         mode: "onChange",
         defaultValues: {
-            items: basketItems.map((item) => ({
-                ...item,
-                quantity: 1,
-            })),
+            items: basketItems.map((item) => ({ ...item, quantity: 1 })),
             fullName: "",
             phone: "",
             totalPrice: 0,
@@ -62,12 +62,14 @@ export const BasketModal: FC<BasketModalProps> = ({ isOpen, clearBasket, onOpenC
             ...methods.getValues(),
             items: newItems,
         });
-    }, [basketItems, methods]);
+    }, [basketItems]);
 
     const watchItems = watch("items");
-
     const totalPrice = watchItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    setValue("totalPrice", totalPrice);
+
+    useEffect(() => {
+        setValue("totalPrice", totalPrice);
+    }, [totalPrice]);
 
     const handleQuantityChange = (index: number, change: number) => {
         const item = watchItems[index];
@@ -92,14 +94,13 @@ export const BasketModal: FC<BasketModalProps> = ({ isOpen, clearBasket, onOpenC
             phone: data.phone,
             items: simplifiedItems,
             totalPrice: data.totalPrice,
+            status: "Создан",
             createdAt: serverTimestamp(),
         };
 
         try {
             await addDoc(collection(db, "orders"), payload);
-
-            alert("Заказ успешно оформлен!");
-            onOpenChange(false);
+            setIsSubmitted(true);
             clearBasket();
         } catch (error) {
             console.error("Ошибка при добавлении заказа: ", error);
@@ -108,13 +109,25 @@ export const BasketModal: FC<BasketModalProps> = ({ isOpen, clearBasket, onOpenC
     };
 
     return (
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="3xl">
+        <Modal
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                onOpenChange(open);
+                if (!open) setIsSubmitted(false);
+            }}
+            size="3xl"
+        >
             <ModalContent>
                 {() => (
                     <RHFProvider methods={methods} onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
                         <ModalHeader>Корзина</ModalHeader>
                         <ModalBody className="space-y-4">
-                            {fields.length === 0 ? (
+                            {isSubmitted ? (
+                                <div className="flex justify-center items-center flex-col py-8 gap-3">
+                                    <Icon icon="solar:bag-check-linear" className="w-[84px] h-[84px] text-green-600" />
+                                    <span className="text-lg font-semibold text-green-600">Заказ успешно оформлен!</span>
+                                </div>
+                            ) : fields.length === 0 ? (
                                 <p>Корзина пуста</p>
                             ) : (
                                 <>
@@ -163,7 +176,6 @@ export const BasketModal: FC<BasketModalProps> = ({ isOpen, clearBasket, onOpenC
                                                 errorMessage={errors.fullName?.message?.toString()}
                                             />
                                         </div>
-
                                         <div className="w-1/2">
                                             <Input
                                                 label="Телефон"
@@ -171,7 +183,7 @@ export const BasketModal: FC<BasketModalProps> = ({ isOpen, clearBasket, onOpenC
                                                     required: "Телефон обязателен",
                                                     pattern: {
                                                         value: /^\+7\d{10}$/,
-                                                        message: "Формат: +7XXXXXXXXXX (всего 11 цифр)",
+                                                        message: "Формат: +7XXXXXXXXXX",
                                                     },
                                                 })}
                                                 isInvalid={!!errors.phone}
@@ -182,14 +194,17 @@ export const BasketModal: FC<BasketModalProps> = ({ isOpen, clearBasket, onOpenC
                                 </>
                             )}
                         </ModalBody>
-                        <ModalFooter>
-                            <div className="flex items-center gap-3 w-full justify-between">
-                                <div className="text-right font-bold text-lg">Итого: {totalPrice} ₽</div>
-                                <Button color="primary" isDisabled={!isValid} type="submit">
-                                    Оформить заказ
-                                </Button>
-                            </div>
-                        </ModalFooter>
+
+                        {!isSubmitted && fields.length > 0 && (
+                            <ModalFooter>
+                                <div className="flex items-center gap-3 w-full justify-between">
+                                    <div className="text-right font-bold text-lg">Итого: {totalPrice} ₽</div>
+                                    <Button color="primary" isDisabled={!isValid} type="submit">
+                                        Оформить заказ
+                                    </Button>
+                                </div>
+                            </ModalFooter>
+                        )}
                     </RHFProvider>
                 )}
             </ModalContent>
