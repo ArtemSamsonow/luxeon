@@ -121,11 +121,17 @@ export const AdminOrders = () => {
                             </TableCell>
                             <TableCell>{order.status}</TableCell>
                             <TableCell>
-                                {order.status != "Оформлен" && (
-                                    <div className="flex flex gap-1">
+                                {order.status != "Оформлен" ? (
+                                    <div className="flex gap-1">
                                         <Button color="warning" variant="light" onClick={() => openModal(order.id, "submit")}>
                                             Оформить заказ
                                         </Button>
+                                        <Button color="danger" variant="light" onClick={() => openModal(order.id, "delete")}>
+                                            Удалить
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <div className="flex gap-1">
                                         <Button color="danger" variant="light" onClick={() => openModal(order.id, "delete")}>
                                             Удалить
                                         </Button>

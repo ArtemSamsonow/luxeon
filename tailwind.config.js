@@ -35,9 +35,9 @@ export default {
             },
             backgroundImage: {
                 "gradient-blue": "linear-gradient( 135deg, #72EDF2 10%, #5151E5 100%)",
-                "slider-image-1": "url('/images/imageSlider1.jpg')",
-                "slider-image-2": "url('/images/imageSlider2.jpg')",
-                "slider-image-3": "url('/images/imageSlider3.jpg')",
+                "slider-image-1": "url('/images/imageSlider1.png')",
+                "slider-image-2": "url('/images/imageSlider2.jpg.png')",
+                "slider-image-3": "url('/images/imageSlider3.png')",
             },
         },
     },
