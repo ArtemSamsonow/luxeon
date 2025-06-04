@@ -1,4 +1,16 @@
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input, Textarea, Switch, ModalContent } from "@heroui/react";
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Button,
+    Input,
+    Textarea,
+    Switch,
+    ModalContent,
+    Select,
+    SelectItem,
+} from "@heroui/react";
 import { useForm, Controller } from "react-hook-form";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../../../firebase";
@@ -22,12 +34,17 @@ interface EditProductModalProps {
     onSave: (product: Product) => void;
 }
 
+const categories = [
+    { label: "Крем", value: "cream" },
+    { label: "Помада", value: "pomade" },
+    { label: "Лак", value: "lacquer" },
+    { label: "Масло", value: "oil" },
+];
+
 export const EditProductModal = ({ isOpen, onClose, product, onSave }: EditProductModalProps) => {
     const methods = useForm<Product>({
         defaultValues: product,
     });
-
-    console.log(isOpen);
 
     const { handleSubmit, reset, control } = methods;
 
@@ -61,7 +78,25 @@ export const EditProductModal = ({ isOpen, onClose, product, onSave }: EditProdu
                         <ModalHeader>Редактировать товар</ModalHeader>
                         <ModalBody className="space-y-4">
                             <Controller name="name" control={control} render={({ field }) => <Input label="Название" {...field} />} />
-                            <Controller name="category" control={control} render={({ field }) => <Input label="Категория" {...field} />} />
+                            <Controller
+                                name="category"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select
+                                        label="Категория"
+                                        isRequired
+                                        selectedKeys={[field.value]}
+                                        onSelectionChange={(keys) => {
+                                            const selected = Array.from(keys)[0];
+                                            field.onChange(selected);
+                                        }}
+                                    >
+                                        {categories.map((cat) => (
+                                            <SelectItem key={cat.value}>{cat.label}</SelectItem>
+                                        ))}
+                                    </Select>
+                                )}
+                            />
                             <Controller
                                 name="price"
                                 control={control}
